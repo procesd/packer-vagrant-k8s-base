@@ -1,4 +1,8 @@
 {
+  "variables": {
+    "cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}"
+  },
+
   "builders": [
     {
       "type": "virtualbox-iso",
@@ -40,5 +44,40 @@
         ["modifyvm", "{{.Name}}", "--cpus", "2"]
       ]
     }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/setup.sh"
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "ansible/packer.yml"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/cleanup.sh"
+    }
+  ],
+
+  "post-processors": [
+  [
+    {
+      "type": "vagrant",
+      "compression_level": "8",
+      "output": "build/packer-ubuntu-k8s-18.04-amd64-{{.Provider}}.box"
+    }
+  ,
+  
+    {
+      "type": "vagrant-cloud",
+      "box_tag": "procesd/ubuntu18.04-k8s",
+      "access_token": "{{user `cloud_token`}}",
+      "version": "0.0.1"
+    }
   ]
+]
 }

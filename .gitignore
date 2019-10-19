@@ -1,2 +1,4 @@
 *.box
+*.vmdk
+*.ovf
 packer_cache/
