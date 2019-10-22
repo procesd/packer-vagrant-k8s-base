@@ -70,3 +70,21 @@
         - kubelet
         - kubeadm
         - kubectl
+
+  - name: copy vagrant insecure key to vagrant Users
+    block:
+      - name: create .ssh dir
+        file:
+          path: /home/vagrant/.ssh
+          owner: vagrant
+          group: docker
+          mode: '0700'
+          state: 'directory'
+
+      - name:
+        copy:
+          src: vagrant_insecure_key.pub
+          dest: /home/vagrant/.ssh/authorized_keys
+          mode: '0600'
+          owner: vagrant
+          group: docker

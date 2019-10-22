@@ -30,7 +30,14 @@ About the line `" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<w
 As part of the effort of having a non-interactive install we use a pressed.cfg file so all the install options are read from it. The builder will start a http server in VirtualBox and serve the file `preseed.cfg`, the location of this file is indicated by the attribute-value pair `"http_directory": "http",`
 Preseeding is a long topic so I will avoid it and give you a link. https://help.ubuntu.com/lts/installation-guide/amd64/apb.html
 
-`ssh_username` and `ssh_password` are necessary to create a user with sudo access so we can use the provisioners, if this box has ever to hit production you want to change the one we use here , that's for sure, also generate and add a ssh key
+`ssh_username` and `ssh_password` are necessary to create a user with sudo access so we can use the provisioners, but I feel like I have to explain my (lack of) choices here:
+
+Young Billy: why vagrant/vagrant? isn't that insecure and prone to attract the mocking of your colleagues?
+
+Me: RTFM, young Billy:
+```
+By default, Vagrant expects a "vagrant" user to SSH into the machine as. This user should be setup with the insecure keypair that Vagrant uses as a default to attempt to SSH. Also, even though Vagrant uses key-based authentication by default, it is a general convention to set the password for the "vagrant" user to "vagrant". This lets people login as that user manually if they need to.
+```
 
 ## 2 Install the packages required for k8s
 ### Provisioners section
@@ -61,10 +68,14 @@ You can also upload to vagrant cloud if you have a Vagrant Cloud account
 In
 ```
 "variables": {
-  "cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}"
+  "cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}",
+  "box_name": "procesd/ubuntu18.04-k8s",
+  "build_number":"0.0.2"
 },
 ```
 We read the vagrant cloud token from environment variable named VAGRANT_CLOUD_TOKEN with your token there, otherwise remove this part (use `export VAGRANT_CLOUD_TOKEN="xxxx"` or `VAGRANT_CLOUD_TOKEN="xxxx" build build-ubuntu-18.04-k8s.json`)
-WARNING: you need to create a box in Vagrant Cloud Web UI before being able to upload it there, otherwise you will get this error `* Post-processor failed: Error retrieving box`.
 
+WARNING: you need to create a box, with the name used in `"box_name"` variable in Vagrant Cloud Web UI before being able to upload it there, otherwise you will get this error `* Post-processor failed: Error retrieving box`.
 Once uploaded, before being able to use  you will have to release it (go to vagrant cloud WebUI, find the box, click the release button)
+
+The box in Vagrant Cloud will change, each new version needs to be a different `build_number`, using semantic versioning here as best practice but, to be honest, as long as you use a new name anything will do.

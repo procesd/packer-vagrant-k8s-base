@@ -1,6 +1,8 @@
 {
   "variables": {
-    "cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}"
+    "cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}",
+    "box_name": "procesd/ubuntu18.04-k8s",
+    "build_number":"0.0.3"
   },
 
   "builders": [
@@ -69,14 +71,12 @@
       "type": "vagrant",
       "compression_level": "8",
       "output": "build/packer-ubuntu-k8s-18.04-amd64-{{.Provider}}.box"
-    }
-  ,
-  
+    },
     {
       "type": "vagrant-cloud",
-      "box_tag": "procesd/ubuntu18.04-k8s",
+      "box_tag": "{{user `box_name`}}",
       "access_token": "{{user `cloud_token`}}",
-      "version": "0.0.1"
+      "version": "{{user `build_number`}}"
     }
   ]
 ]

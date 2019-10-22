@@ -1,3 +1,9 @@
+
+0.0.3
+=====
+Fixed bug 0001,0002 was not a bug, we are jumping 2 versions because I don't seem to remember that the owner is at least as important as the permissions in ssh keys 
+
+
 BUGS:
 0001 - Add insecure public key in ~vagrant/.ssh/authorized_keys (proper permissions) as explained in https://www.vagrantup.com/docs/boxes/base.html
 
@@ -5,6 +11,8 @@ BUGS:
 By default, Vagrant expects a "vagrant" user to SSH into the machine as. This user should be setup with the insecure keypair that Vagrant uses as a default to attempt to SSH. Also, even though Vagrant uses key-based authentication by default, it is a general convention to set the password for the "vagrant" user to "vagrant". This lets people login as that user manually if they need to.
 ```
 Insecure key-par from  https://github.com/hashicorp/vagrant/tree/master/keys
+
+Adding them to ansible provisioning script
 
 0002
 Getting:
@@ -25,7 +33,8 @@ The error output from the command was:
 mount: /vagrant: wrong fs type, bad option, bad superblock on vagrant, missing codepage or helper program, or other error.
 ```
 
-Not sure what's that, but it must be me
+Not sure what's that, but it must be me.
+Mmm, trying `vagrant plugin install vagrant-vbguest` -> Worked
 
 0.0.1
 =====
