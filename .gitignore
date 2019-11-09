@@ -2,3 +2,5 @@
 *.vmdk
 *.ovf
 packer_cache/
+ansible/ansible.cfg
+ansible/hosts

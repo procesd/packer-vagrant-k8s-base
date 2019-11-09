@@ -1,40 +1,26 @@
+0.0.5
+=====
+Adding daemon.json file (docker daemon configuration) to use the systemd cgroups driver as recommended in https://kubernetes.io/docs/setup/production-environment/container-runtimes/
+(bug 0005)
+
+
+0.0.4
+=====
+Fixing kubeadm version to 1.1.6 and then all the rest of k8s and docker versions to validated ones.
+
+- kubelet=1.16.*
+- kubeadm=1.16.*
+- kubectl=1.16.*
+and
+- docker-ce=5:18.09.*
+- docker-ce-cli=5:18.09.*
+- containerd.io=1.2.6*
+
 
 0.0.3
 =====
-Fixed bug 0001,0002 was not a bug, we are jumping 2 versions because I don't seem to remember that the owner is at least as important as the permissions in ssh keys 
-
-
-BUGS:
-0001 - Add insecure public key in ~vagrant/.ssh/authorized_keys (proper permissions) as explained in https://www.vagrantup.com/docs/boxes/base.html
-
-```
-By default, Vagrant expects a "vagrant" user to SSH into the machine as. This user should be setup with the insecure keypair that Vagrant uses as a default to attempt to SSH. Also, even though Vagrant uses key-based authentication by default, it is a general convention to set the password for the "vagrant" user to "vagrant". This lets people login as that user manually if they need to.
-```
-Insecure key-par from  https://github.com/hashicorp/vagrant/tree/master/keys
-
-Adding them to ansible provisioning script
-
-0002
-Getting:
-```
-==> default: Mounting shared folders...
-    default: /vagrant => /Users/perecortada/vagrant/k8s
-Vagrant was unable to mount VirtualBox shared folders. This is usually
-because the filesystem "vboxsf" is not available. This filesystem is
-made available via the VirtualBox Guest Additions and kernel module.
-Please verify that these guest additions are properly installed in the
-guest. This is not a bug in Vagrant and is usually caused by a faulty
-Vagrant box. For context, the command attempted was:
-
-mount -t vboxsf -o uid=1000,gid=1000 vagrant /vagrant
-
-The error output from the command was:
-
-mount: /vagrant: wrong fs type, bad option, bad superblock on vagrant, missing codepage or helper program, or other error.
-```
-
-Not sure what's that, but it must be me.
-Mmm, trying `vagrant plugin install vagrant-vbguest` -> Worked
+Fixed bug 0001. We are jumping 2 versions because I don't seem to remember that the owner is at least as important as the permissions in ssh keys
+0002 was not a bug, as it looks like the only way of not getting a missmatch is adding the virtualbox guest additions version that matches the virtualbox encironment were we run the box, which will change over time.
 
 0.0.1
 =====

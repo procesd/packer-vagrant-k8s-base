@@ -27,9 +27,24 @@
       update_cache: yes
     vars:
       packages:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
+      - docker-ce=5:18.09.*
+      - docker-ce-cli=5:18.09.*
+      - containerd.io=1.2.6*
+
+  - name: copy docker daemon config file
+    copy:
+      src: daemon.json
+      dest: /etc/docker/daemon.json
+      mode: '0600'
+      owner: root
+      group: root
+    register: daemonfile
+
+  - name: restart docker if config changed
+    systemd:
+      state: restarted
+      name: docker
+    when: daemonfile.changed
 
   - name: Add vagrant user to docker group
     user:
@@ -67,9 +82,9 @@
       update_cache: yes
     vars:
       packages:
-        - kubelet
-        - kubeadm
-        - kubectl
+        - kubelet=1.16.*
+        - kubeadm=1.16.*
+        - kubectl=1.16.*
 
   - name: copy vagrant insecure key to vagrant Users
     block:
@@ -88,3 +103,14 @@
           mode: '0600'
           owner: vagrant
           group: docker
+
+
+  - name: Install utilities
+    apt:
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
+    vars:
+      packages:
+        - curl
+        - net-tools
